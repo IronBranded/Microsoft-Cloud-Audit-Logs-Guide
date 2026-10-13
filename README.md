@@ -120,7 +120,7 @@ The interactive guide also works offline: open `site/index.html` from this repos
 | Log Analytics workspace (Azure Monitor Logs) | Azure Monitor | Repository | Configuration required | What is: [Azure Monitor overview](https://learn.microsoft.com/azure/azure-monitor/fundamentals/overview)<br>Evidence: [Log Analytics workspace overview](https://learn.microsoft.com/azure/azure-monitor/logs/log-analytics-workspace-overview) |
 | Microsoft Sentinel analytics, alerts, and incidents | Microsoft Sentinel | Correlation layer | Deployment dependent | What is: [What is Microsoft Sentinel security information and event management (SIEM)?](https://learn.microsoft.com/azure/sentinel/overview)<br>Evidence: [What is Microsoft Sentinel security information and event management (SIEM)?](https://learn.microsoft.com/azure/sentinel/overview) |
 
-**Not yet covered:** Enhanced Windows Telemetry, Containers and Applications, Power Platform and Dynamics 365, Microsoft Intune. These planes are planned; no entry is published until it is checked against Microsoft Learn.
+**Not yet covered:** Enhanced Windows Telemetry, Containers and Applications, Power Platform and Dynamics 365, Microsoft Intune. No entry is published until it is checked against Microsoft Learn documentation.
 <!-- END evidence-sources -->
 
 ## Disclaimer
