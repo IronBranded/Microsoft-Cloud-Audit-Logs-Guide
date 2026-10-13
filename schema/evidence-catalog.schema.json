@@ -1,0 +1,331 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:microsoft-cloud-audit-logs-guide:schema:1.0.0",
+  "title": "Microsoft Cloud Audit Logs Guide data schema",
+  "description": "Validates data/evidence-catalog.json at the root. The products, sources, and relationships files are validated against #/$defs/productsFile, #/$defs/sourcesFile, and #/$defs/relationshipsFile. Cross-file rules (ids resolve, Verified means no gaps) are enforced by scripts/validate-catalog.ps1.",
+  "$ref": "#/$defs/catalogFile",
+  "$defs": {
+    "slug": { "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$" },
+    "sourceId": { "type": "string", "pattern": "^src-[a-z0-9]+(-[a-z0-9]+)*$" },
+    "date": { "type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$" },
+    "nonEmptyString": { "type": "string", "minLength": 1 },
+    "nullableString": { "type": ["string", "null"] },
+    "semver": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
+
+    "evidencePlane": {
+      "enum": [
+        "Identity",
+        "Azure Control Plane",
+        "Azure Resource and Data Plane",
+        "Azure Network and Remote Access",
+        "Windows and Compute",
+        "Enhanced Windows Telemetry",
+        "Microsoft Defender Antivirus",
+        "Microsoft Defender for Endpoint",
+        "Containers and Applications",
+        "Microsoft 365 and Purview Audit",
+        "Power Platform and Dynamics 365",
+        "Microsoft Intune",
+        "Microsoft Security and Defender XDR",
+        "Correlation, Collection, and Preservation"
+      ]
+    },
+    "evidenceType": {
+      "enum": [
+        "Audit", "Sign-in", "Control plane", "Resource/data plane", "Network", "Windows event",
+        "Security telemetry", "Detection", "Incident", "Platform metric", "Application telemetry",
+        "Inventory/context", "Support diagnostic", "Collection configuration", "Repository", "Correlation layer"
+      ]
+    },
+    "availability": {
+      "enum": [
+        "Automatic", "Automatic with limited native retention", "Configuration required",
+        "Auditing policy dependent", "Licensing dependent", "Deployment dependent",
+        "Workload dependent", "On demand", "Verification required"
+      ]
+    },
+    "availabilityFlag": {
+      "description": "Poster legend codes. Several may apply to one entry.",
+      "enum": ["AUTO", "CONFIG", "EXPORT", "LICENSE", "DEPLOY", "POLICY", "ON DEMAND", "SUPPORTING"]
+    },
+    "acquisitionType": {
+      "description": "Controlled list from the master prompt, plus 'Product command-line tool' for vendor executables such as MpCmdRun.exe.",
+      "enum": [
+        "Native PowerShell cmdlet", "Microsoft Graph PowerShell", "Microsoft Graph API invoked with PowerShell",
+        "Az PowerShell", "Azure Monitor and KQL", "Windows Eventing", "Microsoft Graph Security API",
+        "Exchange Online PowerShell", "Microsoft 365 audit API", "Product-specific API",
+        "Product command-line tool", "No documented PowerShell method", "Verification required"
+      ]
+    },
+    "priority": { "enum": ["Core", "Extended", "Specialized"] },
+    "verificationStatus": { "enum": ["Verified", "Conditional", "Verification required", "Deprecated or replaced"] },
+    "apiStatus": { "enum": ["GA", "Beta", "Preview", "Retiring", "Retired", "Current", "Not applicable", "Verification required"] },
+    "commandRole": { "enum": ["Acquires evidence", "Inspects configuration", "Changes configuration", "Authenticates session"] },
+    "outputFormat": { "enum": ["JSON", "CSV", "EVTX", "CLIXML", "TXT", "CAB"] },
+    "laMode": {
+      "enum": [
+        "Resource-specific", "AzureDiagnostics", "AzureDiagnostics or resource-specific",
+        "Fixed table", "Not applicable", "Verification required"
+      ]
+    },
+    "relevanceTag": {
+      "enum": [
+        "Identity and access", "Directory and configuration changes", "Azure resource management",
+        "Data access", "Secrets and keys", "Network activity", "Remote access", "Endpoint activity",
+        "Script and command execution", "Malware detection", "Email and collaboration",
+        "Alerts and incidents", "Collection readiness", "Timeline context"
+      ]
+    },
+    "permissionContext": {
+      "enum": [
+        "Microsoft Graph (application)", "Microsoft Graph (delegated)", "Microsoft Entra role",
+        "Azure RBAC", "Exchange Online / Purview role", "Defender role", "Office 365 Management Activity API", "Local Windows privilege"
+      ]
+    },
+
+    "logAnalyticsTable": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["table", "mode", "verified", "source_ids", "notes"],
+      "properties": {
+        "table": { "type": "string", "pattern": "^[A-Za-z][A-Za-z0-9_]*$" },
+        "mode": { "$ref": "#/$defs/laMode" },
+        "verified": { "type": "boolean" },
+        "source_ids": { "type": "array", "items": { "$ref": "#/$defs/sourceId" } },
+        "notes": { "$ref": "#/$defs/nullableString" }
+      }
+    },
+    "command": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "command", "interface", "example", "purpose", "role", "api_status", "pagination", "verified", "source_ids", "notes"],
+      "properties": {
+        "id": { "$ref": "#/$defs/slug" },
+        "command": { "$ref": "#/$defs/nonEmptyString" },
+        "interface": { "$ref": "#/$defs/nonEmptyString" },
+        "example": { "$ref": "#/$defs/nonEmptyString" },
+        "purpose": { "$ref": "#/$defs/nonEmptyString" },
+        "role": { "$ref": "#/$defs/commandRole" },
+        "api_status": { "$ref": "#/$defs/apiStatus" },
+        "pagination": { "$ref": "#/$defs/nonEmptyString" },
+        "verified": { "type": "boolean" },
+        "source_ids": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/sourceId" } },
+        "notes": { "$ref": "#/$defs/nullableString" }
+      }
+    },
+    "permission": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["context", "value", "verified", "source_ids"],
+      "properties": {
+        "context": { "$ref": "#/$defs/permissionContext" },
+        "value": { "$ref": "#/$defs/nonEmptyString" },
+        "verified": { "type": "boolean" },
+        "source_ids": { "type": "array", "items": { "$ref": "#/$defs/sourceId" } }
+      }
+    },
+    "kqlExample": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["title", "query", "tables", "verified", "source_ids"],
+      "properties": {
+        "title": { "$ref": "#/$defs/nonEmptyString" },
+        "query": { "$ref": "#/$defs/nonEmptyString" },
+        "tables": { "type": "array", "items": { "type": "string" } },
+        "verified": { "type": "boolean" },
+        "source_ids": { "type": "array", "items": { "$ref": "#/$defs/sourceId" } }
+      }
+    },
+
+    "entry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id", "priority", "evidence_plane", "product_id", "evidence_source", "evidence_type", "description",
+        "evidence_doc_source_id", "availability", "availability_flags", "configuration_required",
+        "configuration_notes", "licensing_dependency", "deployment_dependency", "where_to_investigate",
+        "portal_path", "preservation_options", "native_retention", "retention_notes",
+        "diagnostic_setting_applicable", "log_analytics_mode", "log_analytics_tables",
+        "investigation_relevance", "relevance_tags", "powershell", "api", "required_permissions",
+        "output_formats", "limitations", "kql_examples", "publication", "replaced_by", "verification", "notes"
+      ],
+      "properties": {
+        "id": { "$ref": "#/$defs/slug" },
+        "priority": { "$ref": "#/$defs/priority" },
+        "evidence_plane": { "$ref": "#/$defs/evidencePlane" },
+        "product_id": { "$ref": "#/$defs/slug" },
+        "evidence_source": { "$ref": "#/$defs/nonEmptyString" },
+        "evidence_type": { "$ref": "#/$defs/evidenceType" },
+        "description": { "type": "string", "minLength": 20 },
+        "evidence_doc_source_id": { "$ref": "#/$defs/sourceId" },
+        "availability": { "$ref": "#/$defs/availability" },
+        "availability_flags": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "$ref": "#/$defs/availabilityFlag" } },
+        "configuration_required": { "type": "boolean" },
+        "configuration_notes": { "$ref": "#/$defs/nullableString" },
+        "licensing_dependency": { "$ref": "#/$defs/nullableString" },
+        "deployment_dependency": { "$ref": "#/$defs/nullableString" },
+        "where_to_investigate": { "$ref": "#/$defs/nonEmptyString" },
+        "portal_path": { "$ref": "#/$defs/nullableString" },
+        "preservation_options": { "type": "array", "items": { "$ref": "#/$defs/nonEmptyString" } },
+        "native_retention": { "$ref": "#/$defs/nonEmptyString" },
+        "retention_notes": { "$ref": "#/$defs/nullableString" },
+        "diagnostic_setting_applicable": { "type": "boolean" },
+        "log_analytics_mode": { "$ref": "#/$defs/laMode" },
+        "log_analytics_tables": { "type": "array", "items": { "$ref": "#/$defs/logAnalyticsTable" } },
+        "investigation_relevance": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/nonEmptyString" } },
+        "relevance_tags": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "$ref": "#/$defs/relevanceTag" } },
+        "powershell": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["supported", "acquisition_type", "modules", "commands"],
+          "properties": {
+            "supported": { "type": "boolean" },
+            "acquisition_type": { "$ref": "#/$defs/acquisitionType" },
+            "modules": { "type": "array", "items": { "$ref": "#/$defs/nonEmptyString" } },
+            "commands": { "type": "array", "items": { "$ref": "#/$defs/command" } }
+          }
+        },
+        "api": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["supported", "name", "endpoint", "status", "source_ids", "notes"],
+          "properties": {
+            "supported": { "type": "boolean" },
+            "name": { "$ref": "#/$defs/nullableString" },
+            "endpoint": { "$ref": "#/$defs/nullableString" },
+            "status": { "$ref": "#/$defs/apiStatus" },
+            "source_ids": { "type": "array", "items": { "$ref": "#/$defs/sourceId" } },
+            "notes": { "$ref": "#/$defs/nullableString" }
+          }
+        },
+        "required_permissions": { "type": "array", "items": { "$ref": "#/$defs/permission" } },
+        "output_formats": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "$ref": "#/$defs/outputFormat" } },
+        "limitations": { "type": "array", "items": { "$ref": "#/$defs/nonEmptyString" } },
+        "kql_examples": { "type": "array", "items": { "$ref": "#/$defs/kqlExample" } },
+        "publication": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["poster_1", "poster_2", "site"],
+          "properties": {
+            "poster_1": { "type": "boolean" },
+            "poster_2": { "type": "boolean" },
+            "site": { "type": "boolean" }
+          }
+        },
+        "replaced_by": { "type": ["string", "null"], "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$" },
+        "verification": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["status", "last_verified", "gaps", "source_ids"],
+          "properties": {
+            "status": { "$ref": "#/$defs/verificationStatus" },
+            "last_verified": { "$ref": "#/$defs/date" },
+            "gaps": { "type": "array", "items": { "$ref": "#/$defs/nonEmptyString" } },
+            "source_ids": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/sourceId" } }
+          }
+        },
+        "notes": { "$ref": "#/$defs/nullableString" }
+      }
+    },
+    "catalogFile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema_version", "catalog_phase", "notes", "entries"],
+      "properties": {
+        "schema_version": { "$ref": "#/$defs/semver" },
+        "catalog_phase": { "type": "string" },
+        "notes": { "type": "string" },
+        "entries": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/entry" } }
+      }
+    },
+
+    "product": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "name", "short_name", "primary_plane", "what_is_source_id", "learn_label", "summary", "status", "notes"],
+      "properties": {
+        "id": { "$ref": "#/$defs/slug" },
+        "name": { "$ref": "#/$defs/nonEmptyString" },
+        "short_name": { "$ref": "#/$defs/nonEmptyString" },
+        "primary_plane": { "$ref": "#/$defs/evidencePlane" },
+        "what_is_source_id": { "$ref": "#/$defs/sourceId" },
+        "learn_label": { "type": "string", "pattern": "^Learn: " },
+        "summary": { "type": "string", "minLength": 40, "maxLength": 420, "description": "One or two sentences paraphrasing the page named by what_is_source_id. Shown on the interactive site, not the posters." },
+        "status": { "enum": ["Current", "Renamed", "Retiring", "Retired"] },
+        "notes": { "$ref": "#/$defs/nullableString" }
+      }
+    },
+    "productsFile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema_version", "notes", "products"],
+      "properties": {
+        "schema_version": { "$ref": "#/$defs/semver" },
+        "notes": { "type": "string" },
+        "products": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/product" } }
+      }
+    },
+
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "title", "url", "doc_type", "verification_method", "verified_date"],
+      "properties": {
+        "id": { "$ref": "#/$defs/sourceId" },
+        "title": { "$ref": "#/$defs/nonEmptyString" },
+        "url": {
+          "type": "string",
+          "description": "Official Microsoft documentation only. Locale segments (for example /en-us/) are omitted.",
+          "pattern": "^https://learn\\.microsoft\\.com/(?![a-z]{2}-[a-z]{2}/)[^\\s]+$"
+        },
+        "doc_type": {
+          "enum": [
+            "Product overview", "Evidence documentation", "API reference", "Cmdlet reference",
+            "Table reference", "Retention", "Licensing", "Collection configuration",
+            "Acquisition guidance", "Retirement notice", "Terminology"
+          ]
+        },
+        "verification_method": { "enum": ["Fetched page", "Search result", "Linked from verified page"] },
+        "verified_date": { "$ref": "#/$defs/date" }
+      }
+    },
+    "sourcesFile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema_version", "notes", "sources"],
+      "properties": {
+        "schema_version": { "$ref": "#/$defs/semver" },
+        "notes": { "type": "string" },
+        "sources": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/source" } }
+      }
+    },
+
+    "relationship": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "from", "to", "type", "description", "pivot_on", "source_ids", "verified"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^rel-[a-z0-9]+(-[a-z0-9]+)*$" },
+        "from": { "$ref": "#/$defs/slug" },
+        "to": { "$ref": "#/$defs/slug" },
+        "type": {
+          "enum": ["Pivot", "Specializes", "Collection governed by", "Routed to", "Replaced by", "Correlated into", "Derived from", "Context for", "Coverage check", "Rendered copy"]
+        },
+        "description": { "$ref": "#/$defs/nonEmptyString" },
+        "pivot_on": { "type": "array", "items": { "$ref": "#/$defs/nonEmptyString" } },
+        "source_ids": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/sourceId" } },
+        "verified": { "type": "boolean" }
+      }
+    },
+    "relationshipsFile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema_version", "notes", "relationships"],
+      "properties": {
+        "schema_version": { "$ref": "#/$defs/semver" },
+        "notes": { "type": "string" },
+        "relationships": { "type": "array", "items": { "$ref": "#/$defs/relationship" } }
+      }
+    }
+  }
+}

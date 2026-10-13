@@ -1,0 +1,28 @@
+name: Validate data
+
+on:
+  push:
+    paths: ['data/**', 'schema/**', 'scripts/validate-catalog.ps1', '.github/workflows/validate-data.yml']
+  pull_request:
+    paths: ['data/**', 'schema/**', 'scripts/validate-catalog.ps1', '.github/workflows/validate-data.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate catalog (schema, accuracy gates, terminology, sensitive data)
+        shell: pwsh
+        run: ./scripts/validate-catalog.ps1
+
+      - name: Upload validation report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: validation-report
+          path: reports/validation-report.md

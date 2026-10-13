@@ -1,0 +1,28 @@
+name: Check Microsoft Learn links
+
+on:
+  schedule:
+    - cron: '17 6 * * 1'   # weekly, Monday 06:17 UTC
+  pull_request:
+    paths: ['data/sources.json']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  links:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check every source URL and title
+        shell: pwsh
+        run: ./scripts/check-links.ps1
+
+      - name: Upload link report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: link-check
+          path: reports/link-check.md

@@ -1,0 +1,4 @@
+# Keep LF line endings on every platform so rebuilt files match what is committed
+* text=auto eol=lf
+*.pdf binary
+*.png binary

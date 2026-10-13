@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; base-uri 'none'; form-action 'none'">
+<meta name="referrer" content="no-referrer">
+<meta name="color-scheme" content="light dark">
+<title>Microsoft Cloud Audit Logs Guide</title>
+<meta name="description" content="An independent, investigator-focused reference to Microsoft cloud evidence sources, forensic readiness, PowerShell acquisition, and official Microsoft documentation.">
+<link rel="icon" href="assets/icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="css/site.css">
+<link rel="stylesheet" href="css/planes.css">
+<script src="js/theme.js"></script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header">
+  <div class="masthead">
+    <a class="brand" href="#/">
+      <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><rect x="2" y="2" width="12" height="12" rx="1.5"></rect><rect x="18" y="2" width="12" height="12" rx="1.5"></rect><rect x="2" y="18" width="12" height="12" rx="1.5"></rect><circle cx="24" cy="24" r="5.2"></circle><path d="M27.8 27.8 31 31"></path></svg>
+      <span class="brand-text">
+        <span class="brand-name">Microsoft Cloud Audit Logs Guide</span>
+        <span class="brand-sub">Independent investigator reference</span>
+      </span>
+    </a>
+    <button id="theme-toggle" class="theme-toggle" type="button">Theme: System</button>
+  </div>
+  <nav class="site-nav" aria-label="Main">
+    <ul>
+      <li><a href="#/" data-nav="explore">Explore</a></li>
+      <li><a href="#/products" data-nav="products">Products</a></li>
+      <li><a href="#/acquisition" data-nav="acquisition">Acquisition</a></li>
+      <li><a href="#/tables" data-nav="tables">Log Analytics tables</a></li>
+      <li><a href="#/pivots" data-nav="pivots">Pivots</a></li>
+      <li><a href="#/readiness" data-nav="readiness">Readiness and legend</a></li>
+      <li><a href="#/references" data-nav="references">References</a></li>
+      <li><a href="#/print" data-nav="print">Print view</a></li>
+    </ul>
+  </nav>
+</header>
+<main id="main" tabindex="-1">
+  <noscript>
+    <div class="notice">
+      <p>This guide needs JavaScript to filter and display the catalog. The same data is available as JSON: <a href="data/evidence-catalog.json">evidence catalog</a>, <a href="data/products.json">products</a>, <a href="data/relationships.json">relationships</a>, and <a href="data/sources.json">Microsoft references</a>.</p>
+    </div>
+  </noscript>
+  <div id="app"><p class="loading">Loading the evidence catalog…</p></div>
+</main>
+<footer class="site-footer">
+  <p id="disclaimer">This is an independent investigator-focused reference based on publicly available Microsoft documentation. Microsoft product capabilities, licensing, APIs, retention, and log schemas can change. Always verify current behavior in official Microsoft documentation.</p>
+  <p id="build-info"></p>
+</footer>
+<div id="announcer" class="visually-hidden" aria-live="polite" aria-atomic="true"></div>
+<script src="data/catalog-data.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

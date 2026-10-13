@@ -1,0 +1,38 @@
+name: Build posters
+
+on:
+  push:
+    paths: ['data/**', 'schema/**', 'scripts/build-posters.ps1', 'scripts/validate-catalog.ps1', '.github/workflows/build-posters.yml']
+  pull_request:
+    paths: ['data/**', 'schema/**', 'scripts/build-posters.ps1', 'scripts/validate-catalog.ps1', '.github/workflows/build-posters.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  posters:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install the poster typeface
+        run: sudo apt-get update && sudo apt-get install -y fonts-inter
+
+      - name: Validate catalog first
+        shell: pwsh
+        run: ./scripts/validate-catalog.ps1
+
+      - name: Build posters, check consistency and fit, print PDFs
+        shell: pwsh
+        run: ./scripts/build-posters.ps1 -Pdf -Png -BrowserPath /usr/bin/google-chrome
+
+      - name: Upload posters
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: posters
+          path: |
+            posters/**/*.html
+            posters/**/*.pdf
+            posters/**/*.png

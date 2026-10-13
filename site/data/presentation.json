@@ -1,0 +1,160 @@
+{
+  "schema_version": "1.0.0",
+  "notes": "Fixed presentation copy shared by both posters and the interactive site: titles, legends, plane colors, acquisition paths, and methodology statements from the project brief. It holds no product facts; every product fact comes from evidence-catalog.json.",
+  "posters": {
+    "poster_1": {
+      "title": "Microsoft Cloud Forensic Evidence Map",
+      "subtitle": "Audit, Diagnostic, Security, and Operational Evidence for Microsoft Cloud Investigations",
+      "question": "What evidence source should an investigator examine, whether it should exist, and when is it relevant?"
+    },
+    "poster_2": {
+      "title": "Microsoft Cloud Forensic Evidence Acquisition",
+      "subtitle": "PowerShell Reference for Microsoft Cloud and Endpoint Evidence",
+      "question": "How can an investigator acquire or query each Microsoft evidence source with PowerShell?",
+      "sheets": [
+        { "id": "a", "label": "Sheet A", "name": "Azure PowerShell and Azure Monitor", "paths": [1, 3] },
+        { "id": "b", "label": "Sheet B", "name": "Microsoft Graph, endpoints, and Microsoft 365", "paths": [2, 4, 5, 6] }
+      ]
+    }
+  },
+  "site": {
+    "title": "Microsoft Cloud Audit Logs Guide",
+    "tagline": "An investigator-focused reference to Microsoft cloud evidence sources, forensic readiness, PowerShell acquisition, and official Microsoft documentation.",
+    "destinations_note": "Matched from each entry's preservation options. A destination shows where the evidence can be routed or kept, not where it is in a particular tenant.",
+    "destinations": [
+      { "id": "log-analytics", "label": "Log Analytics workspace", "pattern": "Log Analytics|workspace", "entry_ids": ["log-analytics-workspace"] },
+      { "id": "storage", "label": "Azure Storage account", "pattern": "Storage account|Azure Storage", "entry_ids": [] },
+      { "id": "event-hubs", "label": "Event Hubs", "pattern": "Event Hubs", "entry_ids": [] },
+      { "id": "sentinel", "label": "Microsoft Sentinel", "pattern": "Sentinel", "entry_ids": ["sentinel-siem"] },
+      { "id": "purview-retention", "label": "Purview Audit (Premium) retention", "pattern": "Audit \\(Premium\\)", "entry_ids": [] },
+      { "id": "management-api", "label": "Office 365 Management Activity API", "pattern": "Management Activity API", "entry_ids": [] },
+      { "id": "streaming-api", "label": "Defender streaming APIs", "pattern": "Streaming API", "entry_ids": [] },
+      { "id": "file-export", "label": "Exported file (EVTX, CSV, JSON, support package)", "pattern": "EVTX|CSV|as JSON|SupportLogLocation", "entry_ids": [] }
+    ]
+  },
+  "disclaimer": "This is an independent investigator-focused reference based on publicly available Microsoft documentation. Microsoft product capabilities, licensing, APIs, retention, and log schemas can change. Always verify current behavior in official Microsoft documentation.",
+  "readiness": {
+    "headline": "No evidence does not automatically mean no activity occurred.",
+    "intro": "Before drawing a conclusion, establish:",
+    "questions": [
+      "Was the evidence generated?",
+      "Did collection or auditing require configuration?",
+      "Was it configured at the time of the incident?",
+      "Where was the evidence routed?",
+      "What retention applied?",
+      "Does the evidence still exist?",
+      "Did the investigator have sufficient permissions to retrieve it?"
+    ]
+  },
+  "acquisition_warning": "PowerShell acquisition cannot recreate telemetry that was never generated, enabled, collected, retained, or made accessible to the investigator.",
+  "availability_legend": [
+    { "code": "AUTO", "meaning": "Evidence is generated or collected automatically" },
+    { "code": "CONFIG", "meaning": "Auditing, collection, telemetry, or a feature must be configured" },
+    { "code": "EXPORT", "meaning": "Native evidence can be exported or routed" },
+    { "code": "LICENSE", "meaning": "Availability depends on licensing" },
+    { "code": "DEPLOY", "meaning": "Product deployment or onboarding is required" },
+    { "code": "POLICY", "meaning": "Evidence detail depends on an audit or logging policy" },
+    { "code": "ON DEMAND", "meaning": "Evidence is produced only when requested" },
+    { "code": "SUPPORTING", "meaning": "Contextual evidence rather than a primary audit trail" }
+  ],
+  "verification_legend": [
+    { "status": "Verified", "symbol": "✓", "meaning": "Every field checked against current Microsoft documentation" },
+    { "status": "Conditional", "symbol": "!", "meaning": "Usable, with listed gaps still to confirm" },
+    { "status": "Verification required", "symbol": "?", "meaning": "Not yet confirmed; do not rely on it" },
+    { "status": "Deprecated or replaced", "symbol": "✕", "meaning": "Retiring or replaced; use the named successor" }
+  ],
+  "command_roles": [
+    { "role": "Acquires evidence", "tag": "ACQUIRE" },
+    { "role": "Inspects configuration", "tag": "INSPECT" },
+    { "role": "Changes configuration", "tag": "CHANGES CONFIG" },
+    { "role": "Authenticates session", "tag": "CONNECT" }
+  ],
+  "terminology_notes": [
+    "Azure Activity Log is control-plane evidence. It doesn't record every operation inside a resource.",
+    "Azure resources generate Resource Logs, but Azure Monitor does not collect them by default. A Diagnostic Setting or another documented collection configuration must exist for historical collection.",
+    "Diagnostic settings are a collection and routing configuration, not a log.",
+    "AzureDiagnostics is not the universal table; most services write to resource-specific tables.",
+    "Microsoft Sentinel correlates evidence routed to it; it doesn't produce the underlying evidence.",
+    "Defender evidence is security telemetry, alerts, and incidents, not an audit log."
+  ],
+  "planes": [
+    { "number": 1, "name": "Identity", "color": "#2563EB" },
+    { "number": 2, "name": "Azure Control Plane", "color": "#0E7490" },
+    { "number": 3, "name": "Azure Resource and Data Plane", "color": "#0F766E" },
+    { "number": 4, "name": "Azure Network and Remote Access", "color": "#4D7C0F" },
+    { "number": 5, "name": "Windows and Compute", "color": "#475569" },
+    { "number": 6, "name": "Enhanced Windows Telemetry", "color": "#57534E" },
+    { "number": 7, "name": "Microsoft Defender Antivirus", "color": "#B45309" },
+    { "number": 8, "name": "Microsoft Defender for Endpoint", "color": "#C2410C" },
+    { "number": 9, "name": "Containers and Applications", "color": "#7C3AED" },
+    { "number": 10, "name": "Microsoft 365 and Purview Audit", "color": "#BE185D" },
+    { "number": 11, "name": "Power Platform and Dynamics 365", "color": "#9333EA" },
+    { "number": 12, "name": "Microsoft Intune", "color": "#1D4ED8" },
+    { "number": 13, "name": "Microsoft Security and Defender XDR", "color": "#B91C1C" },
+    { "number": 14, "name": "Correlation, Collection, and Preservation", "color": "#334155" }
+  ],
+  "acquisition_paths": [
+    {
+      "number": 1, "id": "native", "name": "Native PowerShell cmdlets",
+      "description": "Az PowerShell, Defender, and documented product commands that read evidence or its configuration directly.",
+      "commands": ["Get-AzActivityLog", "Invoke-AzRestMethod", "Get-AzDiagnosticSetting", "Get-AzDiagnosticSettingCategory", "New-AzDiagnosticSetting", "Get-AzMetric", "Get-AzStorageBlobContent", "Get-AzSentinelIncident", "Get-AzSentinelIncidentAlert", "Get-MpThreatDetection", "Get-MpComputerStatus", "MpCmdRun.exe -GetFiles"]
+    },
+    {
+      "number": 2, "id": "graph", "name": "Microsoft Graph",
+      "description": "Microsoft Graph PowerShell for Microsoft Entra activity logs and other Graph resources.",
+      "commands": ["Get-MgAuditLogDirectoryAudit", "Get-MgAuditLogSignIn", "Get-MgBetaAuditLogSignIn"]
+    },
+    {
+      "number": 3, "id": "kql", "name": "Azure Monitor and KQL",
+      "description": "Evidence already centralized in a Log Analytics workspace or Microsoft Sentinel. Check whether the source writes to AzureDiagnostics or a resource-specific table.",
+      "commands": ["Invoke-AzOperationalInsightsQuery", "Get-AzOperationalInsightsWorkspace"]
+    },
+    {
+      "number": 4, "id": "windows", "name": "Windows Eventing",
+      "description": "Event channels read on the device and exported with their original structure.",
+      "commands": ["Get-WinEvent", "wevtutil epl"]
+    },
+    {
+      "number": 5, "id": "security", "name": "Microsoft Graph Security and Defender interfaces",
+      "description": "Defender XDR incidents and alerts and advanced hunting through the Microsoft Graph security API.",
+      "commands": ["Start-MgSecurityHuntingQuery", "Get-MgSecurityIncident", "Get-MgSecurityAlertV2"]
+    },
+    {
+      "number": 6, "id": "m365audit", "name": "Microsoft 365 Audit interfaces",
+      "description": "Bounded interactive searches (Search-UnifiedAuditLog), asynchronous Graph audit searches, and the Management Activity API feed for programmatic download.",
+      "commands": ["Connect-ExchangeOnline", "Search-UnifiedAuditLog", "New-MgSecurityAuditLogQuery", "Get-MgSecurityAuditLogQueryRecord", "Invoke-WebRequest"]
+    }
+  ],
+  "acquisition_type_paths": {
+    "Native PowerShell cmdlet": 1,
+    "Az PowerShell": 1,
+    "Product command-line tool": 1,
+    "Microsoft Graph PowerShell": 2,
+    "Microsoft Graph API invoked with PowerShell": 2,
+    "Azure Monitor and KQL": 3,
+    "Windows Eventing": 4,
+    "Microsoft Graph Security API": 5,
+    "Exchange Online PowerShell": 6,
+    "Microsoft 365 audit API": 6
+  },
+  "acquisition_record": [
+    "Source system and scope: tenant, subscription, workspace, resource, or device",
+    "Query or filter used, including the time range",
+    "UTC acquisition start and end time",
+    "Collecting account or application identity, and its permission context",
+    "Tool, module, or API name and version",
+    "Original output format and any export format",
+    "How pagination and result limits were handled",
+    "Errors, throttling, and retries",
+    "Known completeness limitations",
+    "Hash of every file produced (for example, SHA-256)"
+  ],
+  "output_guidance": [
+    { "format": "JSON", "use": "APIs and structured cloud results; keeps nested properties" },
+    { "format": "CSV", "use": "Analyst-friendly tables; flatten only after keeping the raw JSON" },
+    { "format": "EVTX", "use": "Windows event channels in their original form" },
+    { "format": "CLIXML", "use": "Only when PowerShell object fidelity matters" },
+    { "format": "TXT", "use": "Human-readable supporting output, never the sole evidence format" }
+  ],
+  "chain_of_custody_note": "Preserve structured raw results before creating summaries. An export mechanism does not establish legal chain of custody by itself."
+}

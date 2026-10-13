@@ -1,0 +1,7 @@
+# Build output that CI assembles; never committed
+_site/
+_offline/
+dist/
+
+# Local test tooling
+node_modules/
