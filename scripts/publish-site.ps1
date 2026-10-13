@@ -28,6 +28,12 @@ $ErrorActionPreference = 'Stop'
 $repoRoot = Split-Path -Parent $PSScriptRoot
 Push-Location $repoRoot
 try {
+    $inside = git rev-parse --is-inside-work-tree 2>$null
+    if ($inside -ne 'true') {
+        throw "$repoRoot is not a Git repository. Clone the GitHub repository, or run 'git init' and 'git remote add origin <url>' in this folder, then commit before publishing."
+    }
+    if (-not (git remote get-url $Remote 2>$null)) { throw "This repository has no remote named '$Remote'." }
+
     & (Join-Path $PSScriptRoot 'validate-catalog.ps1')
     if ($LASTEXITCODE) { throw 'Catalog validation failed. Fix the errors in reports/validation-report.md first.' }
 
@@ -41,8 +47,9 @@ try {
     $branch = git rev-parse --abbrev-ref HEAD
     if ($branch -ne $SourceBranch) { Write-Warning "You are on '$branch'; publishing the committed site/ from '$SourceBranch'." }
 
-    $commit = (git subtree split --prefix site $SourceBranch | Select-Object -Last 1).Trim()
-    if ($LASTEXITCODE -or $commit -notmatch '^[0-9a-f]{40}$') { throw 'git subtree split failed.' }
+    $commit = [string](git subtree split --prefix site $SourceBranch | Select-Object -Last 1)
+    $commit = $commit.Trim()
+    if ($LASTEXITCODE -or $commit -notmatch '^[0-9a-f]{40}$') { throw "git subtree split failed. Is site/ committed on '$SourceBranch'?" }
 
     git push $Remote "${commit}:refs/heads/$PagesBranch" --force
     if ($LASTEXITCODE) { throw "Push to $Remote/$PagesBranch failed." }

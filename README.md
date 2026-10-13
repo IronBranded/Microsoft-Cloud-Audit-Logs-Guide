@@ -2,7 +2,41 @@
 
 A reference that helps cloud DFIR learners and defenders find their way around Microsoft cloud evidence: which log or data source answers a question, whether it exists by default or had to be turned on before the incident, where to look for it, and how to retrieve it with PowerShell. It is built on Microsoft Learn documentation, and every fact links to the Microsoft Learn page it comes from.
 
-**[Open the interactive guide](https://ironbranded.github.io/Microsoft-Cloud-Audit-Logs-Guide/)** · [Offline copy (one HTML file)](https://ironbranded.github.io/Microsoft-Cloud-Audit-Logs-Guide/microsoft-cloud-audit-logs-guide-offline.html) · [Poster 1 (PDF)](posters/poster-1-evidence-map/poster-1-evidence-map.pdf) · Poster 2 [Sheet A (PDF)](posters/poster-2-powershell-acquisition/poster-2a-powershell-acquisition.pdf) and [Sheet B (PDF)](posters/poster-2-powershell-acquisition/poster-2b-powershell-acquisition.pdf)
+## Start here
+
+<h3 align="center">
+  <a href="https://ironbranded.github.io/Microsoft-Cloud-Audit-Logs-Guide/" target="_blank" rel="noopener noreferrer">
+    🟢 OPEN THE GUIDE 🟢
+  </a>
+</h3>
+
+Search and filter every evidence source, open the full detail for each one, and copy PowerShell and KQL examples. Works on desktop and mobile, in light or dark mode.
+
+**Working on a machine without network access?** Open the [offline copy](https://ironbranded.github.io/Microsoft-Cloud-Audit-Logs-Guide/microsoft-cloud-audit-logs-guide-offline.html) and save the page (Ctrl+S). The saved file is the whole guide in one HTML file.
+
+### Posters
+
+<table>
+  <tr>
+    <td width="33%" valign="top">
+      <a href="posters/poster-1-evidence-map/poster-1-evidence-map.pdf"><img src="posters/poster-1-evidence-map/poster-1-evidence-map-thumb.png" alt="Preview of Poster 1, Microsoft Cloud Forensic Evidence Map"></a><br>
+      <b><a href="posters/poster-1-evidence-map/poster-1-evidence-map.pdf">Poster 1: Evidence Map</a></b><br>
+      Which evidence exists, whether it should exist, and when it is relevant.
+    </td>
+    <td width="33%" valign="top">
+      <a href="posters/poster-2-powershell-acquisition/poster-2a-powershell-acquisition.pdf"><img src="posters/poster-2-powershell-acquisition/poster-2a-powershell-acquisition-thumb.png" alt="Preview of Poster 2, Sheet A, PowerShell acquisition with Azure PowerShell and Azure Monitor"></a><br>
+      <b><a href="posters/poster-2-powershell-acquisition/poster-2a-powershell-acquisition.pdf">Poster 2, Sheet A: Acquisition</a></b><br>
+      Azure PowerShell and Azure Monitor (KQL).
+    </td>
+    <td width="33%" valign="top">
+      <a href="posters/poster-2-powershell-acquisition/poster-2b-powershell-acquisition.pdf"><img src="posters/poster-2-powershell-acquisition/poster-2b-powershell-acquisition-thumb.png" alt="Preview of Poster 2, Sheet B, PowerShell acquisition with Microsoft Graph, Windows event logs, Defender, and Microsoft 365"></a><br>
+      <b><a href="posters/poster-2-powershell-acquisition/poster-2b-powershell-acquisition.pdf">Poster 2, Sheet B: Acquisition</a></b><br>
+      Microsoft Graph, Windows event logs, Defender, and Microsoft 365 audit.
+    </td>
+  </tr>
+</table>
+
+Each poster is a 48 x 36 in PDF, sized for printing, with clickable Microsoft Learn links. To save one, open it on GitHub and select the download button.
 
 ## Who it is for
 

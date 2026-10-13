@@ -155,9 +155,11 @@ function New-DataScript([bool]$isBundle) {
 
 $siteData = Join-Path $siteRoot 'data'
 New-Item -ItemType Directory -Force -Path $siteData | Out-Null
-[System.IO.File]::WriteAllText((Join-Path $siteData 'catalog-data.js'), (New-DataScript $false), $utf8)
+# LF line endings on every platform, so a rebuild on Windows produces the same bytes as on Linux.
+function ConvertTo-Lf([string]$text) { $text -replace "`r`n", "`n" }
+[System.IO.File]::WriteAllText((Join-Path $siteData 'catalog-data.js'), (ConvertTo-Lf (New-DataScript $false)), $utf8)
 foreach ($n in $names) {
-    [System.IO.File]::WriteAllText((Join-Path $siteData "$n.json"), $raw[$n] + "`n", $utf8)
+    [System.IO.File]::WriteAllText((Join-Path $siteData "$n.json"), (ConvertTo-Lf $raw[$n]) + "`n", $utf8)
 }
 
 $planeCss = [System.Text.StringBuilder]::new()
@@ -166,7 +168,7 @@ foreach ($pl in $copy.planes) {
     [void]$planeCss.AppendLine(('.plane-{0} {{ --plane: {1}; }}' -f [int]$pl.number, $pl.color.ToLowerInvariant()))
 }
 [void]$planeCss.AppendLine('.plane-0 { --plane: #64748b; }')
-[System.IO.File]::WriteAllText((Join-Path $siteRoot 'css/planes.css'), $planeCss.ToString(), $utf8)
+[System.IO.File]::WriteAllText((Join-Path $siteRoot 'css/planes.css'), (ConvertTo-Lf $planeCss.ToString()), $utf8)
 
 Write-Host "Site data written: $($entries.Count) entries, $($products.Count) products, $($sources.Count) references, $($rels.Count) relationships."
 
@@ -195,6 +197,6 @@ if ($Bundle) {
 
     $bundleDir = Split-Path -Parent ([System.IO.Path]::GetFullPath($Bundle))
     New-Item -ItemType Directory -Force -Path $bundleDir | Out-Null
-    [System.IO.File]::WriteAllText([System.IO.Path]::GetFullPath($Bundle), $html, $utf8)
+    [System.IO.File]::WriteAllText([System.IO.Path]::GetFullPath($Bundle), (ConvertTo-Lf $html), $utf8)
     Write-Host "Single-file bundle written: $Bundle ($([math]::Round((Get-Item $Bundle).Length / 1KB)) KB)"
 }

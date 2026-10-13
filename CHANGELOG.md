@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.3.4 (2026-10-13): README start section and fixes
+
+- README opens with a "Start here" section: a prominent link to the interactive guide, how to use the offline copy, and clickable previews of the three posters.
+- `build-posters.ps1 -Png` also writes an 864 x 648 px preview of each poster (`*-thumb.png`) for the README, and no longer deletes the current Poster 2 PDFs and previews when it runs without `-Pdf` or `-Png`.
+- `publish-site.ps1` stops with a clear message when the folder is not a Git repository or has no remote.
+- `build-site.ps1` writes LF line endings on every platform, so a rebuild on Windows produces the same files as on Linux.
+
 ## 0.3.3 (2026-10-13): README focused on purpose
 
 - README rewritten for cloud DFIR learners and defenders: what the guide is for, what it helps answer, what the project contains, how it relies on Microsoft Learn, and every evidence source with its Microsoft Learn "What is" and evidence documentation links.

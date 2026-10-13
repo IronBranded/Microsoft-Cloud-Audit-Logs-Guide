@@ -573,8 +573,12 @@ function Get-PathHtml($path) {
 
 $p2Dir = Join-Path $OutputRoot 'poster-2-powershell-acquisition'
 New-Item -ItemType Directory -Force -Path $p2Dir | Out-Null
-# Remove outputs from earlier layouts so a stale single-sheet poster can't be mistaken for the current one.
-Get-ChildItem -LiteralPath $p2Dir -File | Where-Object { $_.Name -like 'poster-2*' } | Remove-Item -Force
+# Remove outputs from earlier sheet layouts so a stale poster can't be mistaken for a current one.
+# Files of the current sheets are kept, so a build without -Pdf or -Png leaves existing PDFs and previews in place.
+$currentBases = @($sheets | ForEach-Object { "poster-2$($_.id)-powershell-acquisition" })
+Get-ChildItem -LiteralPath $p2Dir -File | Where-Object {
+    $_.Name -like 'poster-2*' -and (($_.BaseName -replace '-thumb$', '') -notin $currentBases)
+} | Remove-Item -Force
 $p2Paths = [System.Collections.Generic.List[string]]::new()
 
 foreach ($sh in $sheets) {
@@ -736,6 +740,16 @@ if ($Pdf -or $Png) {
             $pngPath = "$base.png"
             & $browser @common '--window-size=4608,3456' '--force-device-scale-factor=0.5' "--screenshot=$pngPath" $uri 2>$null | Out-Null
             Write-Host "PNG  $pngPath"
+            # Small preview for the README: the browser draws the half-scale PNG at 864 x 648 px and screenshots it.
+            # (Chromium does not scale screenshots below half size, and System.Drawing is Windows-only.)
+            $thumbPath = "$base-thumb.png"
+            $thumbHtml = Join-Path ([System.IO.Path]::GetTempPath()) ("poster-thumb-{0}.html" -f [guid]::NewGuid().ToString('N'))
+            $pngUri = [System.Uri]::new((Resolve-Path -LiteralPath $pngPath).Path).AbsoluteUri
+            Set-Content -LiteralPath $thumbHtml -Encoding utf8 -Value ('<!doctype html><html><body style="margin:0;background:#fff"><img src="{0}" width="864" height="648" style="display:block"></body></html>' -f $pngUri)
+            try {
+                & $browser @common '--window-size=864,648' '--force-device-scale-factor=1' '--allow-file-access-from-files' "--screenshot=$thumbPath" ([System.Uri]::new($thumbHtml).AbsoluteUri) 2>$null | Out-Null
+            } finally { Remove-Item -LiteralPath $thumbHtml -ErrorAction SilentlyContinue }
+            Write-Host "PNG  $thumbPath"
         }
     }
 }
