@@ -1,0 +1,160 @@
+{
+  "schema_version": "1.0.0",
+  "notes": "One record per Microsoft product. primary_plane is the product's home on the posters; individual evidence entries may sit in other planes (for example, Azure Monitor owns entries in the Control Plane, Resource and Data Plane, and Collection planes). learn_label is the exact text printed on Poster 1; summary paraphrases the opening of the page named by what_is_source_id and is shown on the interactive site; the link target comes from what_is_source_id.",
+  "products": [
+    {
+      "id": "entra-id",
+      "name": "Microsoft Entra ID",
+      "short_name": "Entra ID",
+      "primary_plane": "Identity",
+      "what_is_source_id": "src-entra-what-is",
+      "learn_label": "Learn: What is Microsoft Entra?",
+      "summary": "Microsoft's cloud-based identity and access management service and the foundational product of the Microsoft Entra family. It provides authentication, policy enforcement, and protection for users, devices, apps, and resources; every Microsoft 365, Azure, and Dynamics CRM Online tenant is a Microsoft Entra tenant.",
+      "status": "Current",
+      "notes": "Linked page describes the Microsoft Entra product family; Microsoft Entra ID is introduced on it as the foundational product."
+    },
+    {
+      "id": "azure-monitor",
+      "name": "Azure Monitor",
+      "short_name": "Azure Monitor",
+      "primary_plane": "Correlation, Collection, and Preservation",
+      "what_is_source_id": "src-azmon-overview",
+      "learn_label": "Learn: Azure Monitor overview",
+      "summary": "Microsoft's unified observability service for collecting, analyzing, and acting on telemetry from cloud and hybrid environments. Its data platform (Log Analytics workspaces for logs and traces, Azure Monitor workspaces for Prometheus metrics) also serves Microsoft Sentinel and Microsoft Defender for Cloud.",
+      "status": "Current",
+      "notes": "Owns the Activity Log, Resource Logs collection, Diagnostic Settings, Platform Metrics, and Log Analytics workspaces."
+    },
+    {
+      "id": "azure-key-vault",
+      "name": "Azure Key Vault",
+      "short_name": "Key Vault",
+      "primary_plane": "Azure Resource and Data Plane",
+      "what_is_source_id": "src-kv-overview",
+      "learn_label": "Learn: About Azure Key Vault",
+      "summary": "An Azure service that stores and controls access to secrets, creates and controls encryption keys, and provisions TLS/SSL certificates. It comes in a Standard tier (software-protected keys) and a Premium tier (HSM-protected keys).",
+      "status": "Current",
+      "notes": null
+    },
+    {
+      "id": "azure-storage",
+      "name": "Azure Storage",
+      "short_name": "Storage",
+      "primary_plane": "Azure Resource and Data Plane",
+      "what_is_source_id": "src-storage-intro",
+      "learn_label": "Learn: Introduction to Azure Storage",
+      "summary": "Microsoft's cloud storage platform. A storage account exposes data services such as Blob Storage, Azure Files, Queues, and Tables, and every request must be authorized with Microsoft Entra ID, Shared Key, or a shared access signature (SAS).",
+      "status": "Current",
+      "notes": null
+    },
+    {
+      "id": "azure-firewall",
+      "name": "Azure Firewall",
+      "short_name": "Azure Firewall",
+      "primary_plane": "Azure Network and Remote Access",
+      "what_is_source_id": "src-fw-overview",
+      "learn_label": "Learn: What is Azure Firewall?",
+      "summary": "A cloud-native, fully stateful network firewall service for Azure workloads that inspects both east-west and north-south traffic. It's offered in Basic, Standard, and Premium SKUs; Premium adds TLS inspection, intrusion detection and prevention, and URL filtering.",
+      "status": "Current",
+      "notes": null
+    },
+    {
+      "id": "azure-network-watcher",
+      "name": "Azure Network Watcher",
+      "short_name": "Network Watcher",
+      "primary_plane": "Azure Network and Remote Access",
+      "what_is_source_id": "src-nw-overview",
+      "learn_label": "Learn: What is Azure Network Watcher?",
+      "summary": "A regional Azure service with tools to monitor, diagnose, view metrics, and enable or disable logs for IaaS resources such as virtual machines, virtual networks, application gateways, and load balancers. It isn't designed for PaaS monitoring, and it's enabled automatically in a region when a virtual network is created or updated there unless the subscription opted out.",
+      "status": "Current",
+      "notes": "Hosts virtual network flow logs, NSG flow logs (retiring), and traffic analytics."
+    },
+    {
+      "id": "azure-waf-application-gateway",
+      "name": "Azure Web Application Firewall on Azure Application Gateway",
+      "short_name": "WAF on App Gateway",
+      "primary_plane": "Azure Network and Remote Access",
+      "what_is_source_id": "src-waf-agw-overview",
+      "learn_label": "Learn: What is Azure WAF on Application Gateway?",
+      "summary": "A web application firewall on Azure Application Gateway that protects web applications from common exploits such as SQL injection and cross-site scripting, based on the OWASP Core Rule Set. Its settings live in WAF policies, which WAF_v2 can associate with a gateway, a listener, or a path-based routing rule.",
+      "status": "Current",
+      "notes": "Azure WAF on Azure Front Door is a separate deployment with its own logs and is not covered by this record."
+    },
+    {
+      "id": "windows",
+      "name": "Windows (Windows Event Log)",
+      "short_name": "Windows",
+      "primary_plane": "Windows and Compute",
+      "what_is_source_id": "src-win-advanced-audit-policy",
+      "learn_label": "Learn: Advanced audit policy",
+      "summary": "Windows records security-relevant activity in the Security event log according to its audit policy. Advanced Audit Policy Configuration, set through Group Policy or the Local Security Policy snap-in, chooses which subcategories generate events; defaults vary by subcategory and, for some, between client and server editions.",
+      "status": "Current",
+      "notes": null
+    },
+    {
+      "id": "powershell",
+      "name": "PowerShell (Windows PowerShell 5.1 and PowerShell 7)",
+      "short_name": "PowerShell",
+      "primary_plane": "Windows and Compute",
+      "what_is_source_id": "src-ps-security-features",
+      "learn_label": "Learn: PowerShell security features",
+      "summary": "PowerShell's security features include module logging, which records pipeline execution events for selected modules, and script block logging, which records the processing of commands, script blocks, functions, and scripts to the Microsoft-Windows-PowerShell/Operational event log. On Windows 10 and later, PowerShell 5.1 and later also pass script blocks to the Antimalware Scan Interface (AMSI).",
+      "status": "Current",
+      "notes": "Linked page is a security-features overview rather than a product 'What is' page."
+    },
+    {
+      "id": "defender-antivirus",
+      "name": "Microsoft Defender Antivirus",
+      "short_name": "Defender Antivirus",
+      "primary_plane": "Microsoft Defender Antivirus",
+      "what_is_source_id": "src-mdav-overview",
+      "learn_label": "Learn: Microsoft Defender Antivirus overview",
+      "summary": "Antivirus protection built into Windows 10, Windows 11, and Windows Server, and the main next-generation protection component of Microsoft Defender for Endpoint. Alongside a non-Microsoft antivirus it may run in passive mode, depending on the operating system and whether the device is onboarded to Defender for Endpoint.",
+      "status": "Current",
+      "notes": "Kept separate from Defender for Endpoint by design: Defender Antivirus is built into Windows and produces local evidence whether or not the device is onboarded to Defender for Endpoint."
+    },
+    {
+      "id": "defender-endpoint",
+      "name": "Microsoft Defender for Endpoint",
+      "short_name": "Defender for Endpoint",
+      "primary_plane": "Microsoft Defender for Endpoint",
+      "what_is_source_id": "src-mde-overview",
+      "learn_label": "Learn: Microsoft Defender for Endpoint overview",
+      "summary": "An enterprise endpoint security platform for preventing, detecting, investigating, and responding to advanced threats on Windows, macOS, Linux, Android, and iOS devices. It feeds endpoint signals into the Microsoft Defender portal, where they're correlated with identity, email, and cloud-workload alerts into incidents.",
+      "status": "Current",
+      "notes": null
+    },
+    {
+      "id": "purview-audit",
+      "name": "Microsoft Purview Audit",
+      "short_name": "Purview Audit",
+      "primary_plane": "Microsoft 365 and Purview Audit",
+      "what_is_source_id": "src-purview-audit-overview",
+      "learn_label": "Learn: Auditing solutions in Microsoft Purview",
+      "summary": "Microsoft Purview auditing records user and admin operations from dozens of Microsoft services in the organization's unified audit log, which can be searched for security, forensic, internal, and compliance investigations. Audit (Standard) is on by default for organizations with an appropriate subscription; Audit (Premium) adds longer retention, retention policies, and intelligent-insight events.",
+      "status": "Current",
+      "notes": "Audit (Standard) and Audit (Premium). Exchange Online, SharePoint, OneDrive, Teams and other workload audit records are searched through this one log."
+    },
+    {
+      "id": "defender-xdr",
+      "name": "Microsoft Defender XDR",
+      "short_name": "Defender XDR",
+      "primary_plane": "Microsoft Security and Defender XDR",
+      "what_is_source_id": "src-xdr-what-is",
+      "learn_label": "Learn: What is Microsoft Defender XDR?",
+      "summary": "A unified pre- and post-breach enterprise defense suite that coordinates detection, prevention, investigation, and response across endpoints, identities, email, and applications. It correlates signals only from the Microsoft security products the organization has licensed and provisioned.",
+      "status": "Current",
+      "notes": null
+    },
+    {
+      "id": "sentinel",
+      "name": "Microsoft Sentinel",
+      "short_name": "Sentinel",
+      "primary_plane": "Correlation, Collection, and Preservation",
+      "what_is_source_id": "src-sentinel-overview",
+      "learn_label": "Learn: What is Microsoft Sentinel?",
+      "summary": "A cloud-native security information and event management (SIEM) solution for threat detection, investigation, response, and proactive hunting across multicloud and multiplatform environments. It inherits Azure Monitor's tamper-proofing and immutability practices: the data platform is append-only but includes provisions to delete data for compliance purposes.",
+      "status": "Current",
+      "notes": "Microsoft documents that after March 31, 2027 Sentinel is no longer supported in the Azure portal and is available only in the Microsoft Defender portal. The product itself is not retiring."
+    }
+  ]
+}

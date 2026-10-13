@@ -1,0 +1,226 @@
+{
+  "schema_version": "1.0.0",
+  "notes": "Evidence-oriented pivots between catalog entries. A relationship says where an investigator can look next and on what fields; it never asserts that one event caused another. pivot_on lists shared attributes; values marked 'Verification required' still need a documented field name.",
+  "relationships": [
+    {
+      "id": "rel-signin-to-audit",
+      "from": "entra-sign-in-logs",
+      "to": "entra-audit-logs",
+      "type": "Pivot",
+      "description": "After establishing how an identity signed in, check which directory changes the same identity made in the same window.",
+      "pivot_on": ["Actor (user, service principal, or agent identity)", "Time window"],
+      "source_ids": ["src-entra-monitoring-overview"],
+      "verified": true
+    },
+    {
+      "id": "rel-audit-to-activity",
+      "from": "entra-audit-logs",
+      "to": "azure-activity-log",
+      "type": "Pivot",
+      "description": "Directory changes and Azure management operations are recorded separately. Check whether the same identity also performed Azure Resource Manager operations.",
+      "pivot_on": ["Actor identity", "Time window"],
+      "source_ids": ["src-entra-audit-logs-concept", "src-activity-log"],
+      "verified": true
+    },
+    {
+      "id": "rel-activity-to-resource-logs",
+      "from": "azure-activity-log",
+      "to": "azure-resource-logs",
+      "type": "Pivot",
+      "description": "A control-plane operation on a resource points to that resource's data-plane activity, which only Resource Logs record.",
+      "pivot_on": ["Resource ID", "Time window"],
+      "source_ids": ["src-activity-log", "src-resource-logs"],
+      "verified": true
+    },
+    {
+      "id": "rel-diagsettings-govern-resource-logs",
+      "from": "azure-diagnostic-settings",
+      "to": "azure-resource-logs",
+      "type": "Collection governed by",
+      "description": "Resource Logs exist for a period only if a diagnostic setting routed the relevant categories during that period.",
+      "pivot_on": ["Resource ID", "Log category"],
+      "source_ids": ["src-resource-logs", "src-kv-monitor"],
+      "verified": true
+    },
+    {
+      "id": "rel-diagsettings-to-workspace",
+      "from": "azure-diagnostic-settings",
+      "to": "log-analytics-workspace",
+      "type": "Routed to",
+      "description": "A diagnostic setting names the workspace (and collection mode) where routed logs land.",
+      "pivot_on": ["Workspace resource ID", "Collection mode"],
+      "source_ids": ["src-resource-logs"],
+      "verified": true
+    },
+    {
+      "id": "rel-resource-logs-keyvault",
+      "from": "azure-resource-logs",
+      "to": "key-vault-audit-event",
+      "type": "Specializes",
+      "description": "Key Vault AuditEvent is a Resource Log category.",
+      "pivot_on": [],
+      "source_ids": ["src-kv-monitor"],
+      "verified": true
+    },
+    {
+      "id": "rel-resource-logs-storage",
+      "from": "azure-resource-logs",
+      "to": "storage-resource-logs",
+      "type": "Specializes",
+      "description": "StorageRead, StorageWrite, and StorageDelete are Resource Log categories.",
+      "pivot_on": [],
+      "source_ids": ["src-blob-monitor-reference"],
+      "verified": true
+    },
+    {
+      "id": "rel-resource-logs-firewall",
+      "from": "azure-resource-logs",
+      "to": "azure-firewall-logs",
+      "type": "Specializes",
+      "description": "Azure Firewall logs are Resource Log categories.",
+      "pivot_on": [],
+      "source_ids": ["src-fw-monitor"],
+      "verified": true
+    },
+    {
+      "id": "rel-resource-logs-waf",
+      "from": "azure-resource-logs",
+      "to": "appgw-waf-logs",
+      "type": "Specializes",
+      "description": "The Application Gateway WAF log is a Resource Log category.",
+      "pivot_on": [],
+      "source_ids": ["src-waf-agw-overview"],
+      "verified": true
+    },
+    {
+      "id": "rel-activity-to-keyvault",
+      "from": "azure-activity-log",
+      "to": "key-vault-audit-event",
+      "type": "Pivot",
+      "description": "A key vault access-policy change appears in the Activity Log; secret and key access after that change appears only in the vault's AuditEvent log.",
+      "pivot_on": ["Key vault resource ID", "Time window"],
+      "source_ids": ["src-activity-log", "src-la-tables-keyvault"],
+      "verified": true
+    },
+    {
+      "id": "rel-metrics-context",
+      "from": "azure-platform-metrics",
+      "to": "azure-resource-logs",
+      "type": "Context for",
+      "description": "Metric changes help narrow the time window; request-level detail is in Resource Logs.",
+      "pivot_on": ["Resource ID", "Time window"],
+      "source_ids": ["src-metrics-overview"],
+      "verified": true
+    },
+    {
+      "id": "rel-nsg-replaced-by-vnet",
+      "from": "nsg-flow-logs",
+      "to": "vnet-flow-logs",
+      "type": "Replaced by",
+      "description": "NSG flow logs retire on September 30, 2027; virtual network flow logs are the documented replacement.",
+      "pivot_on": [],
+      "source_ids": ["src-nsg-flow-logs-migrate"],
+      "verified": true
+    },
+    {
+      "id": "rel-vnet-flow-to-firewall",
+      "from": "vnet-flow-logs",
+      "to": "azure-firewall-logs",
+      "type": "Pivot",
+      "description": "Flow records show that traffic moved; firewall logs show which rule allowed or denied traffic that crossed the firewall.",
+      "pivot_on": ["Source and destination IP addresses", "Ports", "Time window"],
+      "source_ids": ["src-vnet-flow-logs", "src-fw-monitor"],
+      "verified": true
+    },
+    {
+      "id": "rel-security-to-powershell",
+      "from": "windows-security-event-log",
+      "to": "powershell-operational-log",
+      "type": "Pivot",
+      "description": "A process creation event (4688) for a PowerShell host points to script block content (4104) on the same device, when both were enabled.",
+      "pivot_on": ["Device", "Time window"],
+      "source_ids": ["src-debug-cse-runcommand"],
+      "verified": true
+    },
+    {
+      "id": "rel-mdav-to-mde",
+      "from": "defender-av-operational-log",
+      "to": "mde-device-telemetry",
+      "type": "Pivot",
+      "description": "On devices onboarded to Defender for Endpoint, compare local Defender Antivirus events with cloud endpoint telemetry for the same device and time.",
+      "pivot_on": ["Device", "Time window"],
+      "source_ids": ["src-mdav-overview", "src-mde-overview"],
+      "verified": true
+    },
+    {
+      "id": "rel-mdav-support-package",
+      "from": "defender-av-support-package",
+      "to": "defender-av-operational-log",
+      "type": "Rendered copy",
+      "description": "MPOperationalEvents.txt in the support package is a text rendering of the Operational log. Preserve the EVTX channel as the primary evidence.",
+      "pivot_on": [],
+      "source_ids": ["src-asr-troubleshoot"],
+      "verified": true
+    },
+    {
+      "id": "rel-sense-coverage",
+      "from": "mde-sense-operational-log",
+      "to": "mde-device-telemetry",
+      "type": "Coverage check",
+      "description": "Before concluding that endpoint telemetry is absent for a period, check whether the sensor service was running and connected.",
+      "pivot_on": ["Device", "Time window"],
+      "source_ids": ["src-mde-event-error-codes"],
+      "verified": true
+    },
+    {
+      "id": "rel-mde-to-xdr",
+      "from": "mde-device-telemetry",
+      "to": "defender-xdr-incidents-alerts",
+      "type": "Correlated into",
+      "description": "Defender XDR correlates alerts from Defender products, including Defender for Endpoint, into incidents.",
+      "pivot_on": ["Device", "Alert ID"],
+      "source_ids": ["src-xdr-what-is", "src-graph-list-incidents"],
+      "verified": true
+    },
+    {
+      "id": "rel-xdr-to-sentinel",
+      "from": "defender-xdr-incidents-alerts",
+      "to": "sentinel-siem",
+      "type": "Routed to",
+      "description": "The Defender XDR connector streams incidents, alerts, and advanced hunting events into Microsoft Sentinel and keeps incidents synchronized.",
+      "pivot_on": ["Incident ID"],
+      "source_ids": ["src-sentinel-xdr-connector"],
+      "verified": true
+    },
+    {
+      "id": "rel-sentinel-to-workspace",
+      "from": "sentinel-siem",
+      "to": "log-analytics-workspace",
+      "type": "Derived from",
+      "description": "Sentinel analytics run over data in the workspace; an alert or incident should be traced back to the original evidence records there.",
+      "pivot_on": [],
+      "source_ids": ["src-azmon-overview", "src-xdr-ah-overview"],
+      "verified": true
+    },
+    {
+      "id": "rel-entra-to-workspace",
+      "from": "entra-sign-in-logs",
+      "to": "log-analytics-workspace",
+      "type": "Routed to",
+      "description": "Microsoft Entra diagnostic settings route each sign-in category to the workspace.",
+      "pivot_on": ["Diagnostic setting category"],
+      "source_ids": ["src-entra-diag-log-options", "src-entra-la-tutorial"],
+      "verified": true
+    },
+    {
+      "id": "rel-ual-to-signins",
+      "from": "purview-unified-audit-log",
+      "to": "entra-sign-in-logs",
+      "type": "Pivot",
+      "description": "SharePoint, OneDrive, and Exchange activity for a user points to that user's sign-ins in the same window.",
+      "pivot_on": ["User", "IP address", "Time window"],
+      "source_ids": ["src-ps-search-unifiedauditlog", "src-entra-sign-ins-concept"],
+      "verified": true
+    }
+  ]
+}
